@@ -3,6 +3,8 @@ package dk.bm.fido.auth.controllers;
 import dk.bm.fido.auth.dtos.WSO2UserAccountDto;
 import dk.bm.fido.auth.services.WSO2Service;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class HomeController {
@@ -14,11 +16,14 @@ public class HomeController {
         this.wso2Service = wso2Service;
     }
 
-    public String getHome() {
+    @GetMapping("home")
+    public String Home(Model model) {
         if (currentUser == null || !wso2Service.checkUserAuthentication(currentUser)) {
-            return "templates/login";
+            return "redirect:login";
         } else {
-            return "templates/home";
+            model.addAttribute("devices", wso2Service.getUserDevices(currentUser));
+            model.addAttribute("user", currentUser);
+            return "home";
         }
     }
 
