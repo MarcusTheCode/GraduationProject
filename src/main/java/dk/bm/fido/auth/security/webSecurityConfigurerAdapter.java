@@ -14,9 +14,11 @@ public class webSecurityConfigurerAdapter {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(auth ->
-                auth.requestMatchers(new AntPathRequestMatcher("/login")).permitAll()
+                auth
+                        .requestMatchers(new AntPathRequestMatcher("/login")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/home/**")).authenticated()
                         .requestMatchers(new AntPathRequestMatcher("/register")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/oidc-login")).permitAll()
                 )
                 .oauth2Login(oauth -> oauth.loginPage("/login"))
                 .build();

@@ -9,7 +9,7 @@ public class LoginController {
 
     @GetMapping("login")
     public String login (Model model) {
-        return "login";
+        return "redirect:/oauth2/authorization/wso2";
     }
 
     @GetMapping("passwordless")
