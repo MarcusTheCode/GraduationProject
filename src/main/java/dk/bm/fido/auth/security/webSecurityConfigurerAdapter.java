@@ -37,16 +37,4 @@ public class webSecurityConfigurerAdapter {
                 .build();
     }
 
-    private final ClientRegistrationRepository clientRegistrationRepository;
-
-    private LogoutSuccessHandler oidcLogoutSuccessHandler() {
-        OidcClientInitiatedLogoutSuccessHandler oidcLogoutSuccessHandler =
-                new OidcClientInitiatedLogoutSuccessHandler(
-                        this.clientRegistrationRepository);
-
-        oidcLogoutSuccessHandler.setPostLogoutRedirectUri("http://localhost:8080/login");
-
-        return oidcLogoutSuccessHandler;
-    }
-
 }

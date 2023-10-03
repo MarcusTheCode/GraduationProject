@@ -12,6 +12,13 @@ public class LoginController {
         return "redirect:/oauth2/authorization/wso2";
     }
 
+    @GetMapping("logout")
+    public String logout () {
+        return "redirect:/oidc/logout";
+    }
+
+
+
     @GetMapping("passwordless")
     public String passwordless (Model model) {
         return "passwordless";
