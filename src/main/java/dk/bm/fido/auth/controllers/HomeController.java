@@ -30,7 +30,7 @@ public class HomeController {
         } else {
             model.addAttribute("devices", wso2Service.getUserDevices(currentUser));
             model.addAttribute("user", currentUser);
-            return "home";
+            return "redirect:home";
         }
     }
 
