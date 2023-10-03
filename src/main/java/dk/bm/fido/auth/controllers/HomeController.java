@@ -18,13 +18,9 @@ public class HomeController {
 
     @GetMapping("home")
     public String Home(Model model) {
-        if (currentUser == null || !wso2Service.checkUserAuthentication(currentUser)) {
-            return "redirect:login";
-        } else {
-            model.addAttribute("devices", wso2Service.getUserDevices(currentUser));
-            model.addAttribute("user", currentUser);
-            return "home";
-        }
+        model.addAttribute("devices", wso2Service.getUserDevices(currentUser));
+        model.addAttribute("user", currentUser);
+        return "home";
     }
 
     @GetMapping("")
