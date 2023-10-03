@@ -19,7 +19,7 @@ public class webSecurityConfigurerAdapter {
                         .requestMatchers(new AntPathRequestMatcher("/login")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/home/**")).authenticated()
                         .requestMatchers(new AntPathRequestMatcher("/register")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/oidc-login")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
                 )
                 .oauth2Login(oauth -> oauth.loginPage("/login"))
                 .csrf(AbstractHttpConfigurer::disable)

@@ -27,4 +27,15 @@ public class HomeController {
         }
     }
 
+    @GetMapping("")
+    public String root(Model model) {
+        if (!wso2Service.checkUserAuthentication(currentUser)) {
+            return "redirect:login";
+        } else {
+            model.addAttribute("devices", wso2Service.getUserDevices(currentUser));
+            model.addAttribute("user", currentUser);
+            return "home";
+        }
+    }
+
 }
