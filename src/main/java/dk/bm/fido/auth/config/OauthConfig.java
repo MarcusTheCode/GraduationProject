@@ -15,7 +15,6 @@ import java.security.cert.CertificateException;
 
 @Configuration
 public class OauthConfig {
-    @Autowired private Environment env;
 
     @Value("${server.ssl.trust-store}")
     private String trustStoreLocation;

@@ -17,8 +17,6 @@ public class LoginController {
         return "redirect:/oidc/logout";
     }
 
-
-
     @GetMapping("passwordless")
     public String passwordless (Model model) {
         return "passwordless";
