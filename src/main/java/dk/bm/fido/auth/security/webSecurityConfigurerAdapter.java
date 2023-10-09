@@ -19,7 +19,7 @@ import java.net.URI;
 public class webSecurityConfigurerAdapter {
 
     public webSecurityConfigurerAdapter(ClientRegistrationRepository clientRegistrationRepository) {
-        this.clientRegistrationRepository = clientRegistrationRepository;
+        //this.clientRegistrationRepository = clientRegistrationRepository;
     }
 
     @Bean
