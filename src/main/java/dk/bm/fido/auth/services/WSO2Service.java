@@ -11,7 +11,6 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,14 +22,6 @@ public class WSO2Service {
     @Value("${idc.tenant:carbon.super}") private String idcTenant;
 
     @Autowired private RestTemplate restTemplate;
-
-    final CurrentUserService currentUserService;
-    public boolean userLoggedIn = false;
-
-    public WSO2Service(
-            CurrentUserService currentUserService) {
-        this.currentUserService = currentUserService;
-    }
 
     /**
      * Retrieves FIDO devices linked to the account with the given token.
@@ -107,15 +98,4 @@ public class WSO2Service {
 
         return replacedValue;
     }
-
-    public boolean checkUserAuthentication(WSO2UserAccountDto wso2UserAccountDto) {
-        return userLoggedIn;
-    }
-
-    public WSO2UserAccountDto registerFidoDevice(WSO2UserAccountDto wso2UserAccountDto) {
-        return wso2UserAccountDto;
-    }
-
-
-
 }
