@@ -24,8 +24,10 @@ public class HomeController {
     }
 
     @GetMapping("home")
-    public String Home(@CookieValue("commonAuthId") String commonAuth, @RegisteredOAuth2AuthorizedClient("wso2") OAuth2AuthorizedClient authorizedClient, Model model) {
-        String t = wso2Service.getFidoDevices(authorizedClient);
+    public String Home(@RegisteredOAuth2AuthorizedClient("wso2") OAuth2AuthorizedClient authorizedClient, Model model) {
+        //String t = wso2Service.getFidoDevices(authorizedClient);
+        var token = authorizedClient.getAccessToken();
+        String r = wso2Service.getFidoDevices(token.getTokenType().getValue() + " " + token.getTokenValue());
         model.addAttribute("devices", wso2Service.getUserDevices(currentUser));
         model.addAttribute("user", currentUser);
         return "home";

@@ -58,13 +58,12 @@ public class WSO2Service {
         return r.block();
     }
 
-    public String getFidoDevices(String token, String commonAuth) {
+    public String getFidoDevices(String token) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", token);
-        headers.set("Cookie", "commonAuthId=" + commonAuth);
 
         ResponseEntity<String> response = restTemplate.exchange(
-                "https://localhost:9443/t/carbon.super/api/users/v2/me/webauthn?username=john",
+                "https://localhost:9443/t/carbon.super/api/users/v2/me/webauthn",
                 HttpMethod.GET,
                 new HttpEntity<>(headers),
                 String.class);

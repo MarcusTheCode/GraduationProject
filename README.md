@@ -1,6 +1,6 @@
 # GraduationProject
 
 Spring Boot SP - permission/admin/login
-John Doe - Test MyRole
+SYSTEM i scope
 Brug WebClient
 Fjern RestTemplate
