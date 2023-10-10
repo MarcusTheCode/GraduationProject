@@ -26,16 +26,13 @@ public class LoginController {
 
     @GetMapping("login")
     public String login () {
-        wso2Service.userLoggedIn = true;
         return "redirect:/oauth2/authorization/wso2";
     }
 
     @RequestMapping("logoutUser")
     public String logout (Authentication authentication, HttpServletRequest request, HttpServletResponse response) {
-
-        wso2Service.userLoggedIn = false;
         logoutHandler.logout(request, response, authentication);
-        return "redirect:https://localhost:9443/oidc/logout";
+        return "redirect:https://localhost:9443/oidc/logout?post_logout_redirect_uri=http://localhost:8080/login";
     }
 
     @GetMapping("passwordless")

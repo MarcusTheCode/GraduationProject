@@ -4,6 +4,7 @@ import dk.bm.fido.auth.dtos.WSO2UserAccountDto;
 import dk.bm.fido.auth.services.WSO2Service;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
@@ -28,19 +29,17 @@ public class HomeController {
         //String t = wso2Service.getFidoDevices(authorizedClient);
         var token = authorizedClient.getAccessToken();
         var r = wso2Service.getFidoDevices(token.getTokenType().getValue() + " " + token.getTokenValue());
-        model.addAttribute("devices", wso2Service.getUserDevices(currentUser));
+        model.addAttribute("devices", r);
         model.addAttribute("user", currentUser);
         return "home";
     }
 
     @GetMapping("")
-    public String root(Model model) {
-        if (!wso2Service.checkUserAuthentication(currentUser)) {
-            return "redirect:login";
-        } else {
-            //model.addAttribute("devices", wso2Service.getUserDevices(authorizedClient));
-            model.addAttribute("user", currentUser);
+    public String root(@RegisteredOAuth2AuthorizedClient("wso2") OAuth2AuthorizedClient authorizedClient) {
+        if(authorizedClient != null) {
             return "redirect:home";
+        } else {
+            return "redirect:login";
         }
     }
 
