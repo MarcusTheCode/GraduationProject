@@ -1,5 +1,8 @@
 package dk.bm.fido.auth.dtos;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,25 +13,27 @@ import java.util.Date;
 public class FIDODeto {
     @Getter
     @Setter
-    public static class UserIdentityDto {
-        private String name;
-        private String displayName;
-        private String id;
-    }
-
-    @Getter
-    @Setter
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class CredentialDto {
         private String credentialId;
-        private String userHandle;
-        private String publicKeyCose;
-        private long signatureCount;
     }
 
-    private long signatureCount;
-    private UserIdentityDto userIdentity;
-    private CredentialDto credential;
+    private String credentialId;
+    private String displayName;
     private Date registrationTime;
     private boolean isUsernamelessSupported;
-    private String displayName;
+
+    @JsonCreator
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public FIDODeto(
+            @JsonProperty("credential") CredentialDto credential,
+            @JsonProperty("registrationTime") Date registrationTime,
+            @JsonProperty("isUsernamelessSupported") boolean isUsernamelessSupported,
+            @JsonProperty("displayName") String displayName
+    ) {
+        this.credentialId = credential.getCredentialId();
+        this.displayName = displayName;
+        this.registrationTime = registrationTime;
+        this.isUsernamelessSupported = isUsernamelessSupported;
+    }
 }
