@@ -4,13 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dk.bm.fido.auth.dtos.DeviceDto;
-import dk.bm.fido.auth.dtos.FIDODeto;
 import dk.bm.fido.auth.dtos.WSO2UserAccountDto;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
@@ -40,7 +38,7 @@ public class WSO2Service {
      * @param token The token to query for FIDO devices
      * @return A list of FIDO devices
      */
-    public List<FIDODeto> getUserDevices(String token) {
+    public List<DeviceDto> getUserDevices(String token) {
         // TODO: Move URL out to enum
         final String url = "https://localhost:9443/t/carbon.super/api/users/v2/me/webauthn";
 
@@ -48,11 +46,11 @@ public class WSO2Service {
         headers.set("Authorization", token);
 
         try {
-            ResponseEntity<List<FIDODeto>> response = restTemplate.exchange(
+            ResponseEntity<List<DeviceDto>> response = restTemplate.exchange(
                     url,
                     HttpMethod.GET,
                     new HttpEntity<>(headers),
-                    new ParameterizedTypeReference<List<FIDODeto>>() {});
+                    new ParameterizedTypeReference<List<DeviceDto>>() {});
 
             return response.getBody();
         } catch (RestClientException e) {
