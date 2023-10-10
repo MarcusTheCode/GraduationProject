@@ -1,6 +1,6 @@
 package dk.bm.fido.auth.controllers;
 
-import dk.bm.fido.auth.modules.services.WSO2Service;
+import dk.bm.fido.auth.auth.services.WSO2Service;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;

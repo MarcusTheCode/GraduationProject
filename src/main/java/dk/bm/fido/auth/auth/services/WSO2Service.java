@@ -1,7 +1,7 @@
-package dk.bm.fido.auth.modules.services;
+package dk.bm.fido.auth.auth.services;
 
-import dk.bm.fido.auth.modules.dtos.DeviceDto;
-import dk.bm.fido.auth.modules.enums.W2isServerEPType;
+import dk.bm.fido.auth.auth.dtos.DeviceDto;
+import dk.bm.fido.auth.auth.enums.W2isServerEPType;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
