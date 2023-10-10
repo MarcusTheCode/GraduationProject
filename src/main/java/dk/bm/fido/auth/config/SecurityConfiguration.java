@@ -1,29 +1,16 @@
-package dk.bm.fido.auth.security;
+package dk.bm.fido.auth.config;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
-import org.springframework.security.web.authentication.logout.LogoutHandler;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
-import java.io.IOException;
-
 
 @Configuration
 @EnableWebSecurity
-public class webSecurityConfigurerAdapter {
-
+public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(auth ->
@@ -39,12 +26,7 @@ public class webSecurityConfigurerAdapter {
                         .logoutSuccessUrl("/login")
                         .logoutUrl("/logout")
                         .logoutSuccessHandler(
-                                new LogoutSuccessHandler() {
-                                    @Override
-                                    public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-                                        response.sendRedirect("/login");
-                                    }
-                                }
+                                (request, response, authentication) -> response.sendRedirect("/login")
                         ))
                 .csrf(AbstractHttpConfigurer::disable)
                 .build();

@@ -1,4 +1,4 @@
-package dk.bm.fido.auth.enums;
+package dk.bm.fido.auth.external.enums;
 
 import lombok.Getter;
 import org.springframework.http.MediaType;

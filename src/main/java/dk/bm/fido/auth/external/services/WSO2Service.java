@@ -1,17 +1,15 @@
-package dk.bm.fido.auth.services;
+package dk.bm.fido.auth.external.services;
 
-import dk.bm.fido.auth.dtos.DeviceDto;
-import dk.bm.fido.auth.dtos.WSO2UserAccountDto;
-import dk.bm.fido.auth.enums.W2isServerEPType;
+import dk.bm.fido.auth.external.dtos.DeviceDto;
+import dk.bm.fido.auth.external.enums.W2isServerEPType;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,14 +20,10 @@ public class WSO2Service {
     @Value("${idc.api.endpoint:https://localhost:9443}") private String idcApiEndpoint;
     @Value("${idc.tenant:carbon.super}") private String idcTenant;
 
-    @Autowired private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
-    final CurrentUserService currentUserService;
-    public boolean userLoggedIn = false;
-
-    public WSO2Service(
-            CurrentUserService currentUserService) {
-        this.currentUserService = currentUserService;
+    public WSO2Service(@Qualifier("sslRestTemplate") RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
     }
 
     /**
@@ -107,15 +101,4 @@ public class WSO2Service {
 
         return replacedValue;
     }
-
-    public boolean checkUserAuthentication(WSO2UserAccountDto wso2UserAccountDto) {
-        return userLoggedIn;
-    }
-
-    public WSO2UserAccountDto registerFidoDevice(WSO2UserAccountDto wso2UserAccountDto) {
-        return wso2UserAccountDto;
-    }
-
-
-
 }
