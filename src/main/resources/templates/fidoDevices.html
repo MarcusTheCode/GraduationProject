@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Fido Devices</title>
+        <link th:href="@{/CSS/fidoDevices.css}" rel="stylesheet"/>
+    </head>
+    <body>
+        <div th:insert="~{navbar.html}"></div>
+        <div class="text-center">
+            <span th:unless="${!devices.isEmpty()}">No devices found</span>
+
+            <button class="btn btn-light" id="registerNewDevice">Register new device</button>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Date created</th>
+                        <th scope="col">Delete</th>
+                        <th scope="col">Edit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="device: ${devices}">
+                        <td th:text="${device.getDisplayName()}"></td>
+                        <td th:text="${device.getRegistrationTime()}"></td>
+                        <td>
+                            <a th:href="@{/fidoDevices/delete}">
+                                <i class="fa-solid fa-trash"></i>
+                            </a>
+                        </td>
+                        <td>
+                            <a th:href="@{/fidoDevices/editDevice}">
+                                <i class="fa-solid fa-pencil"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+    <script src="/JS/fido.js"></script>
+    <script>
+        registerStart();
+    </script>
+</html>

@@ -34,33 +34,36 @@ public class WSO2Service {
      * @return A list of FIDO devices
      */
     public List<DeviceDto> getUserDevices(String authorization) {
-        ResponseEntity<List<DeviceDto>> response = execute(
+        return execute(
                 W2isServerEPType.GET_FIDO_DEVICES,
                 authorization,
-                null,
-                null);
-
-        return response.getBody();
+                new ParameterizedTypeReference<List<DeviceDto>>() {},
+                null).getBody();
     }
 
     public String startUserDeviceRegistration(String authorization) {
-        ResponseEntity<String> response = execute(
+        return execute(
                 W2isServerEPType.START_FIDO_REGISTRATION,
                 authorization,
-                "appId=" + idcApiEndpoint,
-                null);
-
-        return response.getBody();
+                new ParameterizedTypeReference<String>() {},
+                "appId=" + idcApiEndpoint).getBody();
     }
 
     public String finishUserDeviceRegistration(String authorization, String challengeResponse) {
-        ResponseEntity<String> response = execute(
+        return execute(
                 W2isServerEPType.FINISH_FIDO_REGISTRATION,
                 authorization,
-                challengeResponse,
-                null);
+                new ParameterizedTypeReference<String>() {},
+                challengeResponse).getBody();
+    }
 
-        return response.getBody();
+    public <R, T> ResponseEntity<R> execute(
+            W2isServerEPType w2isServerEPType,
+            String authorization,
+            ParameterizedTypeReference<R> clazz,
+            T body
+    ) {
+        return execute(w2isServerEPType, authorization, clazz, body, null);
     }
 
     /**
@@ -70,7 +73,13 @@ public class WSO2Service {
      * @param tags Tags contain different values that the w2isServerEPType uses to replace part of the request
      * @return Returns the response from the server
      */
-    public <R, T> ResponseEntity<R> execute(W2isServerEPType w2isServerEPType, String authorization, T body, Map<String, String> tags) {
+    public <R, T> ResponseEntity<R> execute(
+            W2isServerEPType w2isServerEPType,
+            String authorization,
+            ParameterizedTypeReference<R> clazz,
+            T body,
+            Map<String, String> tags
+    ) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", authorization);
         headers.set("Content-type", w2isServerEPType.getContentType());
@@ -87,7 +96,7 @@ public class WSO2Service {
                     url,
                     HttpMethod.valueOf(w2isServerEPType.getMethod()),
                     new HttpEntity<>(body, headers),
-                    new ParameterizedTypeReference<R>() {});
+                    clazz);
         } catch (HttpStatusCodeException e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(e.getStatusCode());
