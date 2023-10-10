@@ -1,12 +1,11 @@
-package dk.bm.fido.auth.auth.services;
+package dk.bm.fido.auth.external.services;
 
-import dk.bm.fido.auth.auth.dtos.DeviceDto;
-import dk.bm.fido.auth.auth.enums.W2isServerEPType;
+import dk.bm.fido.auth.external.dtos.DeviceDto;
+import dk.bm.fido.auth.external.enums.W2isServerEPType;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.*;
