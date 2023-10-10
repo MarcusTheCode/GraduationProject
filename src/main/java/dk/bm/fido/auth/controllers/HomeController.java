@@ -23,7 +23,7 @@ public class HomeController {
     public String Home(@RegisteredOAuth2AuthorizedClient("wso2") OAuth2AuthorizedClient authorizedClient, Model model) {
         OAuth2AccessToken token = authorizedClient.getAccessToken();
         String bearerToken = token.getTokenType().getValue() + " " + token.getTokenValue();
-        model.addAttribute("devices", wso2Service.getFidoDevices(bearerToken));
+        model.addAttribute("devices", wso2Service.getUserDevices(bearerToken));
         model.addAttribute("user", currentUser);
         return "home";
     }
