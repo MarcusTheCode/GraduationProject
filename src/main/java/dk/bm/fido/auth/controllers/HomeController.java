@@ -2,17 +2,12 @@ package dk.bm.fido.auth.controllers;
 
 import dk.bm.fido.auth.dtos.WSO2UserAccountDto;
 import dk.bm.fido.auth.services.WSO2Service;
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
-import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 
 @Controller
 public class HomeController {
@@ -26,10 +21,9 @@ public class HomeController {
 
     @GetMapping("home")
     public String Home(@RegisteredOAuth2AuthorizedClient("wso2") OAuth2AuthorizedClient authorizedClient, Model model) {
-        //String t = wso2Service.getFidoDevices(authorizedClient);
-        var token = authorizedClient.getAccessToken();
-        var r = wso2Service.getFidoDevices(token.getTokenType().getValue() + " " + token.getTokenValue());
-        model.addAttribute("devices", r);
+        OAuth2AccessToken token = authorizedClient.getAccessToken();
+        String bearerToken = token.getTokenType().getValue() + " " + token.getTokenValue();
+        model.addAttribute("devices", wso2Service.getUserDevices(bearerToken));
         model.addAttribute("user", currentUser);
         return "home";
     }
