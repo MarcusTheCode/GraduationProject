@@ -1,22 +1,17 @@
 package dk.bm.fido.auth.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dk.bm.fido.auth.dtos.DeviceDto;
 import dk.bm.fido.auth.dtos.WSO2UserAccountDto;
 import dk.bm.fido.auth.enums.W2isServerEPType;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,14 +41,11 @@ public class WSO2Service {
      * @return A list of FIDO devices
      */
     public List<DeviceDto> getUserDevices(String authorization) {
-        // TODO: Move URL out to enum
-        final String url = "https://localhost:9443/t/carbon.super/api/users/v2/me/webauthn";
-
         try {
             ResponseEntity<List<DeviceDto>> response = execute(
                     W2isServerEPType.GET_FIDO_DEVICES,
                     authorization,
-                    new HashMap<>());
+                    null);
 
             return response.getBody();
         } catch (RestClientException e) {
@@ -73,7 +65,9 @@ public class WSO2Service {
     public <T> ResponseEntity<T> execute(W2isServerEPType w2isServerEPType, String authorization, Map<String, String> tags) throws RestClientException {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", authorization);
+        headers.setContentType(MediaType.APPLICATION_JSON); // TODO: Move out
 
+        if (tags == null) tags = new HashMap<>();
         tags.put("{apiEndpoint}", idcApiEndpoint);
         tags.put("{tenant}", idcTenant);
 
