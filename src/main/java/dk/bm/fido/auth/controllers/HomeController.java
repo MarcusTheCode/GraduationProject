@@ -1,7 +1,7 @@
 package dk.bm.fido.auth.controllers;
 
 import dk.bm.fido.auth.dtos.WSO2UserAccountDto;
-import dk.bm.fido.auth.services.WSO2Service;
+import dk.bm.fido.auth.modules.services.WSO2Service;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;

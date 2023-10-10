@@ -1,6 +1,6 @@
 package dk.bm.fido.auth.controllers;
 
-import dk.bm.fido.auth.services.WSO2Service;
+import dk.bm.fido.auth.modules.services.WSO2Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
