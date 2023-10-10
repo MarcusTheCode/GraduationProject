@@ -3,6 +3,7 @@ package dk.bm.fido.auth.auth.services;
 import dk.bm.fido.auth.auth.dtos.DeviceDto;
 import dk.bm.fido.auth.auth.enums.W2isServerEPType;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,11 @@ public class WSO2Service {
     @Value("${idc.api.endpoint:https://localhost:9443}") private String idcApiEndpoint;
     @Value("${idc.tenant:carbon.super}") private String idcTenant;
 
-    @Autowired private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
+
+    public WSO2Service(@Qualifier("sslRestTemplate") RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     /**
      * Retrieves FIDO devices linked to the account with the given token.
