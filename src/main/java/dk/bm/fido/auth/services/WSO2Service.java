@@ -1,22 +1,16 @@
 package dk.bm.fido.auth.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dk.bm.fido.auth.dtos.DeviceDto;
 import dk.bm.fido.auth.dtos.WSO2UserAccountDto;
 import dk.bm.fido.auth.enums.W2isServerEPType;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.*;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,21 +40,33 @@ public class WSO2Service {
      * @return A list of FIDO devices
      */
     public List<DeviceDto> getUserDevices(String authorization) {
-        // TODO: Move URL out to enum
-        final String url = "https://localhost:9443/t/carbon.super/api/users/v2/me/webauthn";
+        ResponseEntity<List<DeviceDto>> response = execute(
+                W2isServerEPType.GET_FIDO_DEVICES,
+                authorization,
+                null,
+                null);
 
-        try {
-            ResponseEntity<List<DeviceDto>> response = execute(
-                    W2isServerEPType.GET_FIDO_DEVICES,
-                    authorization,
-                    new HashMap<>());
+        return response.getBody();
+    }
 
-            return response.getBody();
-        } catch (RestClientException e) {
-            log.error(e.getMessage());
-        }
+    public String startUserDeviceRegistration(String authorization) {
+        ResponseEntity<String> response = execute(
+                W2isServerEPType.START_FIDO_REGISTRATION,
+                authorization,
+                "appId=" + idcApiEndpoint,
+                null);
 
-        return new ArrayList<>();
+        return response.getBody();
+    }
+
+    public String finishUserDeviceRegistration(String authorization, String challengeResponse) {
+        ResponseEntity<String> response = execute(
+                W2isServerEPType.FINISH_FIDO_REGISTRATION,
+                authorization,
+                challengeResponse,
+                null);
+
+        return response.getBody();
     }
 
     /**
@@ -70,22 +76,36 @@ public class WSO2Service {
      * @param tags Tags contain different values that the w2isServerEPType uses to replace part of the request
      * @return Returns the response from the server
      */
-    public <T> ResponseEntity<T> execute(W2isServerEPType w2isServerEPType, String authorization, Map<String, String> tags) throws RestClientException {
+    public <R, T> ResponseEntity<R> execute(W2isServerEPType w2isServerEPType, String authorization, T body, Map<String, String> tags) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", authorization);
+        headers.set("Content-type", w2isServerEPType.getContentType());
+        headers.set("Accept", "*/*");
 
+        if (tags == null) tags = new HashMap<>();
         tags.put("{apiEndpoint}", idcApiEndpoint);
         tags.put("{tenant}", idcTenant);
 
-        String url = w2isServerEPType.getEndpoint();
-        for (Map.Entry<String, String> kv : tags.entrySet())
-            url = url.replace(kv.getKey(), kv.getValue());
+        String url = replaceChars(w2isServerEPType.getEndpoint(), tags);
 
-        return restTemplate.exchange(
-                url,
-                HttpMethod.valueOf(w2isServerEPType.getMethod()),
-                new HttpEntity<>(headers),
-                new ParameterizedTypeReference<T>() {});
+        try {
+            return restTemplate.exchange(
+                    url,
+                    HttpMethod.valueOf(w2isServerEPType.getMethod()),
+                    new HttpEntity<>(body, headers),
+                    new ParameterizedTypeReference<R>() {});
+        } catch (HttpStatusCodeException e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(e.getStatusCode());
+        }
+    }
+
+    private String replaceChars(String value, Map<String, String> tags) {
+        String replacedValue = value;
+        for (Map.Entry<String, String> kv : tags.entrySet())
+            replacedValue = replacedValue.replace(kv.getKey(), kv.getValue());
+
+        return replacedValue;
     }
 
     public boolean checkUserAuthentication(WSO2UserAccountDto wso2UserAccountDto) {
