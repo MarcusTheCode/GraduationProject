@@ -6,21 +6,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dk.bm.fido.auth.dtos.DeviceDto;
 import dk.bm.fido.auth.dtos.FIDODeto;
 import dk.bm.fido.auth.dtos.WSO2UserAccountDto;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
-import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@Log4j2
 @Service
 public class WSO2Service {
-    @Value("${idc.tenant:}")
-    private String idcTenant;
-
     @Autowired
     private RestTemplate restTemplate;
 
@@ -32,18 +33,33 @@ public class WSO2Service {
         this.currentUserService = currentUserService;
     }
 
-    public FIDODeto[] getFidoDevices(String token) {
+    /**
+     * Retrieves FIDO devices linked to the account with the given token.
+     * The token MUST be an authorization_code grant token (Browser login).
+     * Otherwise, it will throw a 403.
+     * @param token The token to query for FIDO devices
+     * @return A list of FIDO devices
+     */
+    public List<FIDODeto> getUserDevices(String token) {
+        // TODO: Move URL out to enum
+        final String url = "https://localhost:9443/t/carbon.super/api/users/v2/me/webauthn";
+
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", token);
 
-        // TODO: Move URL out to enum
-        ResponseEntity<FIDODeto[]> response = restTemplate.exchange(
-                "https://localhost:9443/t/carbon.super/api/users/v2/me/webauthn",
-                HttpMethod.GET,
-                new HttpEntity<>(headers),
-                FIDODeto[].class);
+        try {
+            ResponseEntity<List<FIDODeto>> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    new HttpEntity<>(headers),
+                    new ParameterizedTypeReference<List<FIDODeto>>() {});
 
-        return response.getBody();
+            return response.getBody();
+        } catch (RestClientException e) {
+            log.error(e.getMessage());
+        }
+
+        return new ArrayList<>();
     }
 
     public WSO2UserAccountDto authenticateUser(WSO2UserAccountDto wso2UserAccountDto) {
