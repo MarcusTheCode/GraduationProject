@@ -43,6 +43,27 @@ public class WSO2Service {
         ResponseEntity<List<DeviceDto>> response = execute(
                 W2isServerEPType.GET_FIDO_DEVICES,
                 authorization,
+                null,
+                null);
+
+        return response.getBody();
+    }
+
+    public String startUserDeviceRegistration(String authorization) {
+        ResponseEntity<String> response = execute(
+                W2isServerEPType.START_FIDO_REGISTRATION,
+                authorization,
+                "appId=" + idcApiEndpoint,
+                null);
+
+        return response.getBody();
+    }
+
+    public String finishUserDeviceRegistration(String authorization, String challengeResponse) {
+        ResponseEntity<String> response = execute(
+                W2isServerEPType.FINISH_FIDO_REGISTRATION,
+                authorization,
+                challengeResponse,
                 null);
 
         return response.getBody();
@@ -55,7 +76,7 @@ public class WSO2Service {
      * @param tags Tags contain different values that the w2isServerEPType uses to replace part of the request
      * @return Returns the response from the server
      */
-    public <T> ResponseEntity<T> execute(W2isServerEPType w2isServerEPType, String authorization, Map<String, String> tags) {
+    public <R, T> ResponseEntity<R> execute(W2isServerEPType w2isServerEPType, String authorization, T body, Map<String, String> tags) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", authorization);
         headers.set("Content-type", w2isServerEPType.getContentType());
@@ -65,21 +86,26 @@ public class WSO2Service {
         tags.put("{apiEndpoint}", idcApiEndpoint);
         tags.put("{tenant}", idcTenant);
 
-        String url = w2isServerEPType.getEndpoint();
-        for (Map.Entry<String, String> kv : tags.entrySet())
-            url = url.replace(kv.getKey(), kv.getValue());
+        String url = replaceChars(w2isServerEPType.getEndpoint(), tags);
 
         try {
             return restTemplate.exchange(
                     url,
                     HttpMethod.valueOf(w2isServerEPType.getMethod()),
-                    new HttpEntity<>(headers),
-                    new ParameterizedTypeReference<T>() {
-                    });
+                    new HttpEntity<>(body, headers),
+                    new ParameterizedTypeReference<R>() {});
         } catch (HttpStatusCodeException e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(e.getStatusCode());
         }
+    }
+
+    private String replaceChars(String value, Map<String, String> tags) {
+        String replacedValue = value;
+        for (Map.Entry<String, String> kv : tags.entrySet())
+            replacedValue = replacedValue.replace(kv.getKey(), kv.getValue());
+
+        return replacedValue;
     }
 
     public boolean checkUserAuthentication(WSO2UserAccountDto wso2UserAccountDto) {
