@@ -17,7 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class LoginController {
 
 
-    final WSO2Service wso2Service;
+    private final WSO2Service wso2Service;
+    private SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
 
     public LoginController(WSO2Service wso2Service) {
         this.wso2Service = wso2Service;
@@ -31,10 +32,10 @@ public class LoginController {
 
     @RequestMapping("logoutUser")
     public String logout (Authentication authentication, HttpServletRequest request, HttpServletResponse response) {
-        SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
+
         wso2Service.userLoggedIn = false;
         logoutHandler.logout(request, response, authentication);
-        return "redirect:https://localhost:9443/oidc/logout&redirect_uri=http://localhost:8080/login";
+        return "redirect:https://localhost:9443/oidc/logout";
     }
 
     @GetMapping("passwordless")
