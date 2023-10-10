@@ -9,8 +9,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,18 +40,12 @@ public class WSO2Service {
      * @return A list of FIDO devices
      */
     public List<DeviceDto> getUserDevices(String authorization) {
-        try {
-            ResponseEntity<List<DeviceDto>> response = execute(
-                    W2isServerEPType.GET_FIDO_DEVICES,
-                    authorization,
-                    null);
+        ResponseEntity<List<DeviceDto>> response = execute(
+                W2isServerEPType.GET_FIDO_DEVICES,
+                authorization,
+                null);
 
-            return response.getBody();
-        } catch (RestClientException e) {
-            log.error(e.getMessage());
-        }
-
-        return new ArrayList<>();
+        return response.getBody();
     }
 
     /**
@@ -62,10 +55,11 @@ public class WSO2Service {
      * @param tags Tags contain different values that the w2isServerEPType uses to replace part of the request
      * @return Returns the response from the server
      */
-    public <T> ResponseEntity<T> execute(W2isServerEPType w2isServerEPType, String authorization, Map<String, String> tags) throws RestClientException {
+    public <T> ResponseEntity<T> execute(W2isServerEPType w2isServerEPType, String authorization, Map<String, String> tags) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", authorization);
-        headers.setContentType(MediaType.APPLICATION_JSON); // TODO: Move out
+        headers.set("Content-type", w2isServerEPType.getContentType());
+        headers.set("Accept", "*/*");
 
         if (tags == null) tags = new HashMap<>();
         tags.put("{apiEndpoint}", idcApiEndpoint);
@@ -75,11 +69,17 @@ public class WSO2Service {
         for (Map.Entry<String, String> kv : tags.entrySet())
             url = url.replace(kv.getKey(), kv.getValue());
 
-        return restTemplate.exchange(
-                url,
-                HttpMethod.valueOf(w2isServerEPType.getMethod()),
-                new HttpEntity<>(headers),
-                new ParameterizedTypeReference<T>() {});
+        try {
+            return restTemplate.exchange(
+                    url,
+                    HttpMethod.valueOf(w2isServerEPType.getMethod()),
+                    new HttpEntity<>(headers),
+                    new ParameterizedTypeReference<T>() {
+                    });
+        } catch (HttpStatusCodeException e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(e.getStatusCode());
+        }
     }
 
     public boolean checkUserAuthentication(WSO2UserAccountDto wso2UserAccountDto) {
