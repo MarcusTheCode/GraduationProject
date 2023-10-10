@@ -2,17 +2,12 @@ package dk.bm.fido.auth.controllers;
 
 import dk.bm.fido.auth.dtos.WSO2UserAccountDto;
 import dk.bm.fido.auth.services.WSO2Service;
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
-import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 
 @Controller
 public class HomeController {
@@ -34,13 +29,11 @@ public class HomeController {
     }
 
     @GetMapping("")
-    public String root(Model model) {
-        if (!wso2Service.checkUserAuthentication(currentUser)) {
-            return "redirect:login";
-        } else {
-            //model.addAttribute("devices", wso2Service.getUserDevices(authorizedClient));
-            model.addAttribute("user", currentUser);
+    public String root(@RegisteredOAuth2AuthorizedClient("wso2") OAuth2AuthorizedClient authorizedClient) {
+        if(authorizedClient != null) {
             return "redirect:home";
+        } else {
+            return "redirect:login";
         }
     }
 
