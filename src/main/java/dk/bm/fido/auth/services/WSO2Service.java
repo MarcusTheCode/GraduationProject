@@ -46,37 +46,9 @@ public class WSO2Service {
         return response.getBody();
     }
 
-    public WSO2UserAccountDto authenticateUser(WSO2UserAccountDto wso2UserAccountDto) {
-
-        WSO2UserAccountDto currentUser = new WSO2UserAccountDto();
-
-        currentUserService.setWso2UserAccountDto(currentUser);
-
-        return currentUser;
-    }
 
     public boolean checkUserAuthentication(WSO2UserAccountDto wso2UserAccountDto) {
         return userLoggedIn;
-    }
-
-    public List<DeviceDto> getUserDevices(OAuth2AuthorizedClient oAuth2AuthorizedClient) {
-        String uri = "http://localhost:9443/";
-
-        RestTemplate restTemplate = new RestTemplate();
-        String result = restTemplate.getForObject(uri, String.class);
-        ObjectMapper mapper = new ObjectMapper();
-
-        try{
-            List<DeviceDto> devices = mapper.readValue(result, new TypeReference<List<DeviceDto>>() {});
-            return devices;
-        }catch (JsonProcessingException e) {
-            System.out.println(e);
-            return null;
-        }
-    }
-
-    public WSO2UserAccountDto registerUser(WSO2UserAccountDto wso2UserAccountDto) {
-        return wso2UserAccountDto;
     }
 
     public WSO2UserAccountDto registerFidoDevice(WSO2UserAccountDto wso2UserAccountDto) {
