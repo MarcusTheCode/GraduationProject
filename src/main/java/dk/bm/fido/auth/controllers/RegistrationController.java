@@ -1,7 +1,6 @@
 package dk.bm.fido.auth.controllers;
 
 import dk.bm.fido.auth.auth.services.WSO2Service;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
@@ -12,8 +11,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class RegistrationController {
+    private final WSO2Service wso2Service;
 
-    @Autowired WSO2Service wso2Service;
+    public RegistrationController(WSO2Service wso2Service) {
+        this.wso2Service = wso2Service;
+    }
 
     @PostMapping(value = "/register/start", produces = MediaType.APPLICATION_JSON_VALUE)
     public String registerStart(@RegisteredOAuth2AuthorizedClient("wso2") OAuth2AuthorizedClient authorizedClient) {
