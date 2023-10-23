@@ -10,7 +10,7 @@
         <div class="text-center">
             <span th:unless="${!devices.isEmpty()}">No devices found</span>
 
-            <button class="btn btn-light" id="registerNewDevice">Register new device</button>
+            <button class="btn btn-light" id="registerNewDevice" onclick="fidoFlow()">Register new device</button>
             <table class="table">
                 <thead>
                     <tr>
@@ -40,7 +40,4 @@
         </div>
     </body>
     <script th:src="@{/JS/fido.js}"></script>
-    <script>
-        fidoFlow();
-    </script>
 </html>
