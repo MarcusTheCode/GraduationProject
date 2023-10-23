@@ -26,7 +26,7 @@ public class HomeController {
     }
 
     @GetMapping("")
-    public String root(/*@RegisteredOAuth2AuthorizedClient("wso2") OAuth2AuthorizedClient authorizedClient*/) {
+    public String root() {
             return "redirect:home";
     }
 

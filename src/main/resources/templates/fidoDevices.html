@@ -10,7 +10,7 @@
         <div class="text-center">
             <span th:unless="${!devices.isEmpty()}">No devices found</span>
 
-            <button class="btn btn-light" id="registerNewDevice" onclick="fidoFlow()">Register new device</button>
+            <button class="btn btn-primary float-left mt-2 mb-1 ml-1" type="submit" id="registerNewDevice" onclick="fidoFlow()">Register new device</button>
             <table class="table">
                 <thead>
                     <tr>
@@ -25,9 +25,11 @@
                         <td th:text="${device.getDisplayName()}"></td>
                         <td th:text="${device.getRegistrationTime()}"></td>
                         <td>
-                            <a th:href="@{/fidoDevices/delete}">
-                                <i class="fa-solid fa-trash"></i>
-                            </a>
+                            <form th:action="@{/fidoDevices/deleteDevice/{id}(id=${device.getCredentialId()})}" method="post">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </form>
                         </td>
                         <td>
                             <a th:href="@{/fidoDevices/editDevice}">

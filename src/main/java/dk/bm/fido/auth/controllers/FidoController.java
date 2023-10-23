@@ -1,12 +1,13 @@
 package dk.bm.fido.auth.controllers;
 
+import dk.bm.fido.auth.external.dtos.DeviceDto;
 import dk.bm.fido.auth.external.services.WSO2Service;
 import dk.bm.fido.auth.services.FrontEndServiceSupreme;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class FidoController {
@@ -29,9 +30,13 @@ public class FidoController {
         return "fidoDevices";
     }
 
-    @GetMapping("fidoDevices/delete")
-    public void deleteFidoDevice() {
-        return;
+    @PostMapping(value="fidoDevices/deleteDevice/{credential}") //Delete not supported by forms
+    public String deleteFidoDevice(
+            @PathVariable String credential,
+            @RegisteredOAuth2AuthorizedClient("wso2") OAuth2AuthorizedClient authorizedClient
+    ) {
+        wso2Service.deleteDeviceCredential(FrontEndServiceSupreme.getBearerToken(authorizedClient), credential);
+        return "redirect:/fidoDevices";
     }
     @GetMapping("fidoDevices/edit")
     public void editFidoDevice() {
