@@ -29,14 +29,15 @@ public class webSecurityConfigurerAdapter {
         return http.authorizeHttpRequests(auth ->
                         auth
                                 .requestMatchers(new AntPathRequestMatcher("/login")).permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/logoutUser")).permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/home/**")).authenticated()
-                                .requestMatchers(new AntPathRequestMatcher("/fidoDevices/**")).authenticated()
+                                //.requestMatchers(new AntPathRequestMatcher("/logoutUser")).permitAll()
+                                //.requestMatchers(new AntPathRequestMatcher("/home/**")).authenticated()
+                                //.requestMatchers(new AntPathRequestMatcher("/fidoDevices/**")).authenticated()
                                 .requestMatchers(new AntPathRequestMatcher("/CSS/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/JS/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/register")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/favicon.ico")).permitAll()
+                                .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth -> oauth.loginPage("/login"))
                 .logout(logout -> logout
