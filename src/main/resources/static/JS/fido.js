@@ -66,7 +66,6 @@ function responseToObject(response) {
 
         if (response.response.attestationObject) {
             return {
-                // tslint:disable-next-line:object-literal-sort-keys
                 clientExtensionResults,
                 id: response.id,
                 response: {
@@ -79,7 +78,6 @@ function responseToObject(response) {
             };
         } else {
             return {
-                // tslint:disable-next-line:object-literal-sort-keys
                 clientExtensionResults,
                 id: response.id,
                 response: {
@@ -96,10 +94,16 @@ function responseToObject(response) {
             };
         }
     }
-};
+}
 
+/**
+ * Creates a credential by calling CTAP2
+ * @param request The request
+ * @returns {Promise<Credential>} Returns a credential
+ */
 async function createCredentials(request) {
     // Decode IDs in excludeCredentials
+    /** @type PublicKeyCredentialDescriptor[] */
     const excludeCredentials = request.excludeCredentials.map(
         (credential) => {
             return { ...credential, id: decodeBase64(credential.id) };
@@ -107,6 +111,7 @@ async function createCredentials(request) {
     );
 
     // Decode challenge and user id
+    /** @type PublicKeyCredentialCreationOptions */
     const publicKeyCredentialCreationOptions = {
         ...request,
         attestation: "direct",
@@ -124,6 +129,12 @@ async function createCredentials(request) {
     });
 }
 
+/**
+ * Finalizes a FIDO device registration
+ * @param {string} requestId The ID of the registration request
+ * @param {PublicKeyCredentialCreationOptions} credential The generated credential
+ * @returns {Promise<any>} Returns success or failure
+ */
 async function registerFinish(requestId, credential) {
     // Create the payload, containing the request's ID and the generated credential
     const payload = {
@@ -143,6 +154,10 @@ async function registerFinish(requestId, credential) {
     return await result.json();
 }
 
+/**
+ * Start registering a FIDO device
+ * @returns {Promise<any>} Returns the registration request with credential options
+ */
 async function registerStart() {
     // Call the backend to initiate registration
     let result = await fetch("/register/start", {
@@ -156,12 +171,12 @@ async function registerStart() {
 }
 
 async function fidoFlow() {
-    // Initiate FIDO creation
+    // Initiate FIDO registration
     const request = await registerStart();
 
     // Ask user to generate a credential
     const credential = await createCredentials(request?.publicKeyCredentialCreationOptions);
 
-    // Finish the creation
+    // Finish the registration
     return await registerFinish(request?.requestId, credential);
 }

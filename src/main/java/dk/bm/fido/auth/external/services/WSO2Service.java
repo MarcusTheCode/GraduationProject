@@ -41,6 +41,11 @@ public class WSO2Service {
                 null).getBody();
     }
 
+    /**
+     *
+     * @param authorization
+     * @return
+     */
     public String startUserDeviceRegistration(String authorization) {
         return execute(
                 W2isServerEPType.START_FIDO_REGISTRATION,
@@ -49,6 +54,12 @@ public class WSO2Service {
                 "appId=" + idcApiEndpoint).getBody();
     }
 
+    /**
+     *
+     * @param authorization
+     * @param challengeResponse
+     * @return
+     */
     public String finishUserDeviceRegistration(String authorization, String challengeResponse) {
         return execute(
                 W2isServerEPType.FINISH_FIDO_REGISTRATION,
@@ -57,6 +68,14 @@ public class WSO2Service {
                 challengeResponse).getBody();
     }
 
+    /**
+     * Executes an API call based on the values passed into the method
+     * @param w2isServerEPType The endpoint configuration that needs to be called
+     * @param authorization This is the authorization that will be used as part of the API request
+     * @param clazz The class to return
+     * @param body The body to send to the endpoint
+     * @return Returns the response from the server
+     */
     public <R, T> ResponseEntity<R> execute(
             W2isServerEPType w2isServerEPType,
             String authorization,
@@ -70,6 +89,8 @@ public class WSO2Service {
      * Executes an API call based on the values passed into the method
      * @param w2isServerEPType The endpoint configuration that needs to be called
      * @param authorization This is the authorization that will be used as part of the API request
+     * @param clazz The class to return
+     * @param body The body to send to the endpoint
      * @param tags Tags contain different values that the w2isServerEPType uses to replace part of the request
      * @return Returns the response from the server
      */
