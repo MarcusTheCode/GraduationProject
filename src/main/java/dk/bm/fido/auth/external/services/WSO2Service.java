@@ -67,8 +67,14 @@ public class WSO2Service {
                 new ParameterizedTypeReference<String>() {},
                 challengeResponse).getBody();
     }
+
+    /**
+     * Delete a FIDO device
+     * @param authorization Authorization header of the user
+     * @param credential The ID of the credential to remove
+     */
     public String deleteDeviceCredential(String authorization, String credential) {
-             return execute(
+         return execute(
                 W2isServerEPType.DELETE_FIDO_DEVICE,
                 authorization,
                 new ParameterizedTypeReference<String>() {},
