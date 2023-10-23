@@ -14,19 +14,19 @@ public enum W2isServerEPType {
     ),
     GET_FIDO_DEVICES(
             "GET", true,
-            "{apiEndpoint}/t/{tenant}/api/users/v2/me/webauthn",
+            "{idpEndpoint}/t/{tenant}/api/users/v2/me/webauthn",
             MediaType.APPLICATION_JSON_VALUE, new HashMap<>(), "", ""),
     START_FIDO_REGISTRATION(
             "POST", true,
-            "{apiEndpoint}/t/{tenant}/api/users/v2/me/webauthn/start-registration",
+            "{idpEndpoint}/t/{tenant}/api/users/v2/me/webauthn/start-registration",
             MediaType.APPLICATION_FORM_URLENCODED_VALUE, new HashMap<>(), "", ""),
     FINISH_FIDO_REGISTRATION(
             "POST", true,
-            "{apiEndpoint}/t/{tenant}/api/users/v2/me/webauthn/finish-registration",
+            "{idpEndpoint}/t/{tenant}/api/users/v2/me/webauthn/finish-registration",
             MediaType.APPLICATION_JSON_VALUE, new HashMap<>(), "", ""),
     DELETE_FIDO_DEVICE(
             "DELETE", true,
-            "{apiEndpoint}/t/{tenant}/api/users/v2/me/webauthn/{credential}",
+            "{idpEndpoint}/t/{tenant}/api/users/v2/me/webauthn/{credential}",
             MediaType.APPLICATION_JSON_VALUE, new HashMap<>(), "", "");
 
     private final String method;

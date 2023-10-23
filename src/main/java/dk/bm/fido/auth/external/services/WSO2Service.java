@@ -17,7 +17,7 @@ import java.util.Map;
 @Log4j2
 @Service
 public class WSO2Service {
-    @Value("${idc.api.endpoint:https://localhost:9443}") private String idcApiEndpoint;
+    @Value("${idc.idp.endpoint:https://localhost:9443}") private String idcIdpEndpoint;
     @Value("${idc.tenant:carbon.super}") private String idcTenant;
 
     private final RestTemplate restTemplate;
@@ -120,7 +120,7 @@ public class WSO2Service {
         headers.set("Accept", "*/*");
 
         if (tags == null) tags = new HashMap<>();
-        tags.put("{apiEndpoint}", idcApiEndpoint);
+        tags.put("{idpEndpoint}", idcIdpEndpoint);
         tags.put("{tenant}", idcTenant);
 
         String url = replaceChars(w2isServerEPType.getEndpoint(), tags);

@@ -28,7 +28,7 @@
                     <p class="nav-link" th:text="${username}"></p>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/logoutUser}" th:if="${authenticated}">Logout</a>
+                    <a class="nav-link" th:href="@{/logout}" th:if="${authenticated}">Logout</a>
                     <a class="nav-link" th:href="@{/login}" th:unless="${authenticated}">Login</a>
                 </li>
             </ul>
