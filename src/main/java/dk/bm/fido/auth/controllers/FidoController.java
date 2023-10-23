@@ -1,8 +1,8 @@
 package dk.bm.fido.auth.controllers;
 
-import dk.bm.fido.auth.external.dtos.DeviceDto;
 import dk.bm.fido.auth.external.services.WSO2Service;
 import dk.bm.fido.auth.services.FrontEndServiceSupreme;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.stereotype.Controller;
@@ -20,9 +20,12 @@ public class FidoController {
 
     @GetMapping("fidoDevices")
     public String fidoDevices(
+            Authentication authentication,
             Model model,
             @RegisteredOAuth2AuthorizedClient("wso2") OAuth2AuthorizedClient authorizedClient
     ) {
+        FrontEndServiceSupreme.setAuthenticated(authentication, model);
+
         model.addAttribute(
                 "devices" ,
                 wso2Service.getUserDevices(FrontEndServiceSupreme.getBearerToken(authorizedClient))
@@ -38,6 +41,7 @@ public class FidoController {
         wso2Service.deleteDeviceCredential(FrontEndServiceSupreme.getBearerToken(authorizedClient), credential);
         return "redirect:/fidoDevices";
     }
+
     @GetMapping("fidoDevices/edit")
     public void editFidoDevice() {
         return;

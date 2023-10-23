@@ -17,7 +17,6 @@ public class SecurityConfiguration {
                         auth
                                 .requestMatchers(new AntPathRequestMatcher("/login")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/logoutUser")).permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/home/**")).authenticated()
                                 .requestMatchers(new AntPathRequestMatcher("/fidoDevices/**")).authenticated()
                                 .requestMatchers(new AntPathRequestMatcher("/CSS/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/JS/**")).permitAll()

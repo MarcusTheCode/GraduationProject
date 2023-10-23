@@ -17,15 +17,19 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav d-flex">
                 <li class="nav-item">
-                    <a class="nav-link" href="/home">Home</a>
+                    <a class="nav-link" th:href="@{/}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/fidoDevices">Fido devices</a>
+                    <a class="nav-link" th:href="@{/fidoDevices}">Fido devices</a>
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
+                <li class="nav-item" th:if="${authenticated}">
+                    <p class="nav-link" th:href="@{/logout}" th:text="${username}"></p>
+                </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/logoutUser">Logout</a>
+                    <a class="nav-link" th:href="@{/logout}" th:if="${authenticated}">Logout</a>
+                    <a class="nav-link" th:href="@{/login}" th:unless="${authenticated}">Login</a>
                 </li>
             </ul>
         </div>

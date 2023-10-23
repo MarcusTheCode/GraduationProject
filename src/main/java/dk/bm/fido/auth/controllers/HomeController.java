@@ -1,33 +1,19 @@
 package dk.bm.fido.auth.controllers;
 
-import dk.bm.fido.auth.external.services.WSO2Service;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
-import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
-import org.springframework.security.oauth2.core.OAuth2AccessToken;
+import dk.bm.fido.auth.services.FrontEndServiceSupreme;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class HomeController {
-    private final WSO2Service wso2Service;
 
-    public HomeController(WSO2Service wso2Service) {
-        this.wso2Service = wso2Service;
-    }
+    @GetMapping("/")
+    public String home(Authentication authentication, Model model) {
+        FrontEndServiceSupreme.setAuthenticated(authentication, model);
 
-    @GetMapping("home")
-    public String Home(@RegisteredOAuth2AuthorizedClient("wso2") OAuth2AuthorizedClient authorizedClient, Model model) {
-        OAuth2AccessToken token = authorizedClient.getAccessToken();
-        String bearerToken = token.getTokenType().getValue() + " " + token.getTokenValue();
-        model.addAttribute("devices", wso2Service.getUserDevices(bearerToken));
-        model.addAttribute("user", null);
         return "home";
-    }
-
-    @GetMapping("")
-    public String root() {
-            return "redirect:home";
     }
 
 }
