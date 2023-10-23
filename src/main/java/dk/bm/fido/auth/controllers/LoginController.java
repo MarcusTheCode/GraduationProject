@@ -18,15 +18,15 @@ public class LoginController {
         this.wso2Service = wso2Service;
     }
 
-    @GetMapping("login")
+    @GetMapping("/login")
     public String login () {
         return "redirect:/oauth2/authorization/wso2";
     }
 
-    @RequestMapping("logout")
+    @RequestMapping("/logoutUser")
     public String logout (Authentication authentication, HttpServletRequest request, HttpServletResponse response) {
         logoutHandler.logout(request, response, authentication);
-        return "redirect:https://localhost:9443/oidc/logout?post_logout_redirect_uri=http://localhost:8080";
+        return "redirect:https://localhost:9443/oidc/logout?post_logout_redirect_uri=http://localhost:8080/login";
     }
 
 }

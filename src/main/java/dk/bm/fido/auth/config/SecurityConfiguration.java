@@ -18,7 +18,7 @@ public class SecurityConfiguration {
                                 .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/error")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/login")).permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/logout")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/logoutUser")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/fidoDevices/**")).authenticated()
                                 .requestMatchers(new AntPathRequestMatcher("/CSS/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/JS/**")).permitAll()
@@ -28,10 +28,10 @@ public class SecurityConfiguration {
                 .oauth2Login(oauth -> oauth.loginPage("/login"))
                 //.formLogin(login -> login.loginPage("/login"))
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/")
+                        .logoutSuccessUrl("/login")
                         .logoutUrl("/logout")
                         .logoutSuccessHandler(
-                                (request, response, authentication) -> response.sendRedirect("/")
+                                (request, response, authentication) -> response.sendRedirect("/login")
                         ))
                 .csrf(AbstractHttpConfigurer::disable)
                 .build();
