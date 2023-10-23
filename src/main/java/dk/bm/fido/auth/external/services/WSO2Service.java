@@ -46,7 +46,7 @@ public class WSO2Service {
                 W2isServerEPType.START_FIDO_REGISTRATION,
                 authorization,
                 new ParameterizedTypeReference<String>() {},
-                "appId=" + idcApiEndpoint).getBody();
+                "appId=" + "http://localhost:8080" /*idcApiEndpoint*/).getBody();
     }
 
     public String finishUserDeviceRegistration(String authorization, String challengeResponse) {
