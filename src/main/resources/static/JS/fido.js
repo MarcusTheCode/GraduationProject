@@ -7,7 +7,7 @@ for (let i = 0; i < chars.length; i++) {
     lookup[chars.charCodeAt(i)] = i;
 }
 
-function Encode(arraybuffer) {
+function encodeBase64(arraybuffer) {
     var bytes = new Uint8Array(arraybuffer),
         i, len = bytes.length, base64 = "";
 
@@ -25,9 +25,9 @@ function Encode(arraybuffer) {
     }
 
     return base64;
-};
+}
 
-function decode(base64) {
+function decodeBase64(base64) {
     let bufferLength = base64.length * 0.75,
         len = base64.length, i, p = 0,
         encoded1, encoded2, encoded3, encoded4;
@@ -49,6 +49,7 @@ function decode(base64) {
     return arraybuffer;
 }
 
+// TODO: Decipher this...
 function responseToObject(response) {
     if (response.u2fResponse) {
         return response;
@@ -69,10 +70,10 @@ function responseToObject(response) {
                 clientExtensionResults,
                 id: response.id,
                 response: {
-                    attestationObject: Encode(
+                    attestationObject: encodeBase64(
                         response.response.attestationObject
                     ),
-                    clientDataJSON: Encode(response.response.clientDataJSON)
+                    clientDataJSON: encodeBase64(response.response.clientDataJSON)
                 },
                 type: response.type
             };
@@ -82,14 +83,14 @@ function responseToObject(response) {
                 clientExtensionResults,
                 id: response.id,
                 response: {
-                    authenticatorData: Encode(
+                    authenticatorData: encodeBase64(
                         response.response.authenticatorData
                     ),
-                    clientDataJSON: Encode(response.response.clientDataJSON),
-                    signature: Encode(response.response.signature),
+                    clientDataJSON: encodeBase64(response.response.clientDataJSON),
+                    signature: encodeBase64(response.response.signature),
                     userHandle:
                         response.response.userHandle &&
-                        Encode(response.response.userHandle)
+                        encodeBase64(response.response.userHandle)
                 },
                 type: response.type
             };
@@ -97,42 +98,40 @@ function responseToObject(response) {
     }
 };
 
-async function nativeAuthn(request) {
+async function createCredentials(request) {
     // Decode IDs in excludeCredentials
     const excludeCredentials = request.excludeCredentials.map(
         (credential) => {
-            return { ...credential, id: decode(credential.id) };
+            return { ...credential, id: decodeBase64(credential.id) };
         }
     );
 
+    // Decode challenge and user id
     const publicKeyCredentialCreationOptions = {
         ...request,
         attestation: "direct",
-        challenge: decode(request.challenge),
+        challenge: decodeBase64(request.challenge),
         excludeCredentials,
         user: {
             ...request.user,
-            id: decode(request.user.id)
+            id: decodeBase64(request.user.id)
         }
     };
 
-    console.log(publicKeyCredentialCreationOptions);
-
-    const credential = await navigator.credentials.create({
+    // Invoke CTAP to create a credential
+    return await navigator.credentials.create({
         publicKey: publicKeyCredentialCreationOptions
     });
-
-    console.log(credential);
-
-    return credential;
 }
 
 async function registerFinish(requestId, credential) {
+    // Create the payload, containing the request's ID and the generated credential
     const payload = {
         requestId: requestId,
-        credential: responseToObject(credential) // TODO: responseToObject
+        credential: responseToObject(credential)
     };
 
+    // Call the backend to finish registration
     let result = await fetch("/register/finish", {
         method: "POST",
         headers: {
@@ -145,6 +144,7 @@ async function registerFinish(requestId, credential) {
 }
 
 async function registerStart() {
+    // Call the backend to initiate registration
     let result = await fetch("/register/start", {
         method: "POST",
         headers: {
@@ -155,15 +155,13 @@ async function registerStart() {
     return await result.json();
 }
 
-function fidoFlow() {
-    registerStart()
-        .then(request =>
-            nativeAuthn(request?.publicKeyCredentialCreationOptions)
-                .then(credential =>
-                    registerFinish(request?.requestId, credential)
-                        .then(console.log)
-                        .catch(console.error))
-                .catch(console.error)
-        )
-        .catch(console.error);
+async function fidoFlow() {
+    // Initiate FIDO creation
+    const request = await registerStart();
+
+    // Ask user to generate a credential
+    const credential = await createCredentials(request?.publicKeyCredentialCreationOptions);
+
+    // Finish the creation
+    return await registerFinish(request?.requestId, credential);
 }
