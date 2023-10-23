@@ -27,6 +27,7 @@ public class TrustConfig {
 
         KeyStore ks = KeyStore.getInstance(trusdStoreFile, trustStorePassword.toCharArray());
 
+        // This is necessary for self-signed certificates
         //System.setProperty("javax.net.debug", "all");
         System.setProperty("javax.net.ssl.trustStore", trusdStoreFile.getAbsolutePath());
         System.setProperty("javax.net.ssl.trustStorePassword", trustStorePassword);

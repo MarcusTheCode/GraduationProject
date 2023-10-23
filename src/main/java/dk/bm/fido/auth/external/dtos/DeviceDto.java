@@ -1,4 +1,4 @@
-package dk.bm.fido.auth.dtos;
+package dk.bm.fido.auth.external.dtos;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class FIDODeto {
+public class DeviceDto {
     @Getter
     @Setter
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -25,7 +25,7 @@ public class FIDODeto {
 
     @JsonCreator
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public FIDODeto(
+    public DeviceDto(
             @JsonProperty("credential") CredentialDto credential,
             @JsonProperty("registrationTime") Date registrationTime,
             @JsonProperty("isUsernamelessSupported") boolean isUsernamelessSupported,
