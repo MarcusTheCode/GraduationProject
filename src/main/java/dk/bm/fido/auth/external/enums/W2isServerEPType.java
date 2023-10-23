@@ -23,6 +23,10 @@ public enum W2isServerEPType {
     FINISH_FIDO_REGISTRATION(
             "POST", true,
             "{apiEndpoint}/t/{tenant}/api/users/v2/me/webauthn/finish-registration",
+            MediaType.APPLICATION_JSON_VALUE, new HashMap<>(), "", ""),
+    DELETE_FIDO_DEVICE(
+            "DELETE", true,
+            "{apiEndpoint}/t/{tenant}/api/users/v2/me/webauthn/{credential}",
             MediaType.APPLICATION_JSON_VALUE, new HashMap<>(), "", "");
 
     private final String method;

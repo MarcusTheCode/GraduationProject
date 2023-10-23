@@ -51,7 +51,7 @@ public class WSO2Service {
                 W2isServerEPType.START_FIDO_REGISTRATION,
                 authorization,
                 new ParameterizedTypeReference<String>() {},
-                "appId=" + idcApiEndpoint).getBody();
+                "appId=" + "http://localhost:8080" /*idcApiEndpoint*/).getBody();
     }
 
     /**
@@ -66,6 +66,13 @@ public class WSO2Service {
                 authorization,
                 new ParameterizedTypeReference<String>() {},
                 challengeResponse).getBody();
+    }
+    public String deleteDeviceCredential(String authorization, String credential) {
+             return execute(
+                W2isServerEPType.DELETE_FIDO_DEVICE,
+                authorization,
+                new ParameterizedTypeReference<String>() {},
+                null, new HashMap<>(){{put("{credential}", credential);}}).getBody();
     }
 
     /**

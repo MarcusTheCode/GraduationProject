@@ -26,6 +26,7 @@ public class SecurityConfiguration {
                                 .requestMatchers(new AntPathRequestMatcher("/favicon.ico")).permitAll()
                 )
                 .oauth2Login(oauth -> oauth.loginPage("/login"))
+                //.formLogin(login -> login.loginPage("/login"))
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login")
                         .logoutUrl("/logout")
