@@ -21,6 +21,13 @@ public class TrustConfig {
     @Value("${server.ssl.trust-store-type}")
     private String trustStoreType;
 
+    /**
+     * Configures the ssl connection by setting the properties for the system as detailed in the application properties
+     * @throws CertificateException if a certificate could not be loaded
+     * @throws KeyStoreException if there is no service provider interface that supports the given keystore
+     * @throws IOException if there is a formatting problem with the keystore, no password provided, or it is incorrect.
+     * @throws NoSuchAlgorithmException If the integrity algorithm for the keystore cannot be found
+     */
     @PostConstruct
     private void configureSSL() throws CertificateException, KeyStoreException, IOException, NoSuchAlgorithmException {
         File trusdStoreFile = new File(trustStoreLocation);
