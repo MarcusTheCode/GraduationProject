@@ -27,6 +27,10 @@ public enum W2isServerEPType {
     DELETE_FIDO_DEVICE(
             "DELETE", true,
             "{idpEndpoint}/t/{tenant}/api/users/v2/me/webauthn/{credential}",
+            MediaType.APPLICATION_JSON_VALUE, new HashMap<>(), "", ""),
+    EDIT_FIDO_DEVICE(
+            "PATCH", true,
+            "{apiEndpoint}/t/{tenant}/api/users/v2/me/webauthn/{credential}",
             MediaType.APPLICATION_JSON_VALUE, new HashMap<>(), "", "");
 
     private final String method;
