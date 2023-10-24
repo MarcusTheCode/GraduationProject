@@ -85,7 +85,12 @@ public class WSO2Service {
                 null, new HashMap<>(){{put("{credential}", credential);}}).getBody();
     }
 
-
+    /**
+     * Edit the name a FIDO device
+     * @param authorization Authorization header of the user
+     * @param credential The ID of the credential to remove
+     * @param newName The new name for the device
+     */
     public String editDeviceName(String authorization, String credential, String newName) {
              return execute(
                 W2isServerEPType.EDIT_FIDO_DEVICE,
