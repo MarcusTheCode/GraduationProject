@@ -41,7 +41,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(auth ->
                         auth
-                                .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/")).authenticated()
                                 .requestMatchers(new AntPathRequestMatcher("/error")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/login")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/fidoDevices/**")).authenticated()
@@ -51,7 +51,6 @@ public class SecurityConfiguration {
                                 .requestMatchers(new AntPathRequestMatcher("/favicon.ico")).permitAll()
                 )
                 .oauth2Login(oauth -> oauth.loginPage("/login"))
-                //.formLogin(login -> login.loginPage("/login"))
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .clearAuthentication(true)
