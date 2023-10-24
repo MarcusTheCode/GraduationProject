@@ -1,8 +1,11 @@
 package dk.bm.fido.auth.external.services;
 
+import com.nimbusds.jose.shaded.gson.JsonObject;
 import dk.bm.fido.auth.external.dtos.DeviceDto;
 import dk.bm.fido.auth.external.enums.W2isServerEPType;
 import lombok.extern.log4j.Log4j2;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -10,6 +13,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.*;
 
+import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,6 +67,22 @@ public class WSO2Service {
                 new ParameterizedTypeReference<String>() {},
                 null, new HashMap<>(){{put("{credential}", credential);}}).getBody();
     }
+
+    public String editDeviceName(String authorization, String credential, String newName) {
+             return execute(
+                W2isServerEPType.EDIT_FIDO_DEVICE,
+                authorization,
+                new ParameterizedTypeReference<String>() {},
+                new JSONArray(){{
+                    add(new JSONObject(){{
+                        put("operation","REPLACE");
+                        put("path", "/displayName");
+                        put("value", newName);
+                    }}
+                    );
+                }}, new HashMap<>(){{put("{credential}", credential);}}).getBody();
+    }
+
 
     public <R, T> ResponseEntity<R> execute(
             W2isServerEPType w2isServerEPType,

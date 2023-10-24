@@ -38,8 +38,13 @@ public class FidoController {
         wso2Service.deleteDeviceCredential(FrontEndServiceSupreme.getBearerToken(authorizedClient), credential);
         return "redirect:/fidoDevices";
     }
-    @GetMapping("fidoDevices/edit")
-    public void editFidoDevice() {
-        return;
+    @PostMapping("fidoDevices/editDevice/{credential}/{newName}")
+    public String editFidoDevice(
+            @PathVariable String credential,
+            @PathVariable String newName,
+            @RegisteredOAuth2AuthorizedClient("wso2") OAuth2AuthorizedClient authorizedClient
+    ) {
+        wso2Service.editDeviceName(FrontEndServiceSupreme.getBearerToken(authorizedClient), credential, newName);
+        return "redirect:/fidoDevices";
     }
 }
