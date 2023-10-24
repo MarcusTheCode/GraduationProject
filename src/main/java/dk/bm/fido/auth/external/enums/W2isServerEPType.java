@@ -30,7 +30,7 @@ public enum W2isServerEPType {
             MediaType.APPLICATION_JSON_VALUE, new HashMap<>(), "", ""),
     EDIT_FIDO_DEVICE(
             "PATCH", true,
-            "{apiEndpoint}/t/{tenant}/api/users/v2/me/webauthn/{credential}",
+            "{idpEndpoint}/t/{tenant}/api/users/v2/me/webauthn/{credential}",
             MediaType.APPLICATION_JSON_VALUE, new HashMap<>(), "", "");
 
     private final String method;
