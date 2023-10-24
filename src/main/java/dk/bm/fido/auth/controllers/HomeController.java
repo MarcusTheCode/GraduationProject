@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class HomeController {
     /**
      * Set authentication when accessing the root page
-     * @param authentication the authorized client pulled from the authorization header
+     * @param authentication the http authentication header giving the identification of the current user
      * @param model container for attributes between backend and frontend
      * @return homepage html with the model attributes defined by the setAuthenticated method
      */

@@ -21,7 +21,7 @@ public class FidoController {
     /**
      * Function for retrieving the users FIDO2 devices and returning them with the html page
      * @param model container for attributes between backend and frontend
-     * @param authentication identification of the current user
+     * @param authentication the http authentication header giving the identification of the current user
      * @param authorizedClient the authorized client pulled from the authorization header; it is pulled out separately for simplicity
      * @return the FIDO2 devices list html, with the FIDO2 devices added to the model
      */

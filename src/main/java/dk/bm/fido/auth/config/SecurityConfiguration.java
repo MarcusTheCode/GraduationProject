@@ -22,10 +22,15 @@ public class SecurityConfiguration {
     @Value("${idc.idp.endpoint:https://localhost:9443}") private String idcIdpEndpoint;
     @Value("${idc.api.endpoint:http://localhost:8080}") private String idcApiEndpoint;
 
+    /**
+     * Logout handler that finds the authenticated user, and redirects to wso2 for logout
+     * @param request the http request header received from the client
+     * @param response configurable object for responding to the request
+     * @param authentication the http authentication header giving the identification of the current user
+     */
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         if (authentication == null)
             return;
-
         OAuth2AuthenticationToken oauth2Auth = (OAuth2AuthenticationToken) authentication;
         String idToken = ((DefaultOidcUser) oauth2Auth.getPrincipal()).getIdToken().getTokenValue();
 
@@ -37,6 +42,11 @@ public class SecurityConfiguration {
         }
     }
 
+    /**
+     *
+     * @param http is a configuration object, used to configure the rules for accessing the application
+     * @return the build HttpSecurity configuration
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(auth ->
