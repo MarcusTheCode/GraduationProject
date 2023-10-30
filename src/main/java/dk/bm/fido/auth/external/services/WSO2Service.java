@@ -33,7 +33,7 @@ public class WSO2Service {
 
     /**
      * Retrieves FIDO devices linked to the account with the given token.
-     * The token MUST be an authorization_code grant token (Browser login).
+     * The token MUST be an authorization_code grant token (Browser login) or Basic.
      * Otherwise, it will throw a 403.
      * @param authorization The token to query for FIDO devices eg. "Bearer 0fd3..."
      * @return A list of FIDO devices
