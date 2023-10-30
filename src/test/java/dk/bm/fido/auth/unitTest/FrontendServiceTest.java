@@ -1,11 +1,10 @@
 package dk.bm.fido.auth.unitTest;
 
 import dk.bm.fido.auth.BaseTestSetup;
-import dk.bm.fido.auth.services.FrontEndHelper;
+import dk.bm.fido.auth.services.FrontEndService;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 
@@ -20,7 +19,7 @@ public class FrontendServiceTest extends BaseTestSetup {
         Model model = new ExtendedModelMap();
         Authentication authentication = getMockAuthentication();
         authentication.setAuthenticated(false);
-        FrontEndHelper.setAuthenticated(authentication, model);
+        FrontEndService.setAuthenticated(authentication, model);
 
         assertThat(model.getAttribute("authenticated")).isEqualTo(false);
     }
@@ -30,7 +29,7 @@ public class FrontendServiceTest extends BaseTestSetup {
         Model model = new ExtendedModelMap();
         Authentication authentication = getMockAuthentication();
         authentication.setAuthenticated(true);
-        FrontEndHelper.setAuthenticated(authentication, model);
+        FrontEndService.setAuthenticated(authentication, model);
 
         assertThat(model.getAttribute("authenticated")).isEqualTo(true);
         assertThat(model.getAttribute("username")).isNotNull();
@@ -39,7 +38,7 @@ public class FrontendServiceTest extends BaseTestSetup {
     @Test
     public void setAuthenticationNotNullTest() {
         Model model = new ExtendedModelMap();
-        FrontEndHelper.setAuthenticated(null, model);
+        FrontEndService.setAuthenticated(null, model);
 
         assertThat(model.getAttribute("authenticated")).isEqualTo(false);
     }

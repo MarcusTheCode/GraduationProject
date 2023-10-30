@@ -1,6 +1,6 @@
 package dk.bm.fido.auth.controllers;
 
-import dk.bm.fido.auth.services.FrontEndHelper;
+import dk.bm.fido.auth.services.FrontEndService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +16,7 @@ public class HomeController {
      */
     @GetMapping("/")
     public String home(Authentication authentication, Model model) {
-        FrontEndHelper.setAuthenticated(authentication, model);
+        FrontEndService.setAuthenticated(authentication, model);
         return "home";
     }
 
