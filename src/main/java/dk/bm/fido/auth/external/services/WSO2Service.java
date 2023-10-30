@@ -83,7 +83,7 @@ public class WSO2Service {
                 W2isServerEPType.DELETE_FIDO_DEVICE,
                 authorization,
                 new ParameterizedTypeReference<String>() {},
-                null, new HashMap<>(){{put("{credential}", credential);}}).getBody();
+                null, new HashMap<>(){{ put("{credential}", credential); }}).getBody();
     }
 
     /**
@@ -92,11 +92,11 @@ public class WSO2Service {
      * @param credential The ID of the credential to remove
      * @param newName The new name for the device
      */
-    public String editDeviceName(String authorization, String credential, String newName) {
-             return execute(
+    public void editDeviceName(String authorization, String credential, String newName) {
+             execute(
                 W2isServerEPType.EDIT_FIDO_DEVICE,
                 authorization,
-                new ParameterizedTypeReference<String>() {},
+                new ParameterizedTypeReference<Void>() {},
                 new JSONArray(){{
                     add(new JSONObject(){{
                         put("operation","REPLACE");
@@ -104,7 +104,7 @@ public class WSO2Service {
                         put("value", newName);
                     }}
                     );
-                }}, new HashMap<>(){{put("{credential}", credential);}}).getBody();
+                }}, new HashMap<>(){{ put("{credential}", credential); }}).getBody();
     }
 
     /**
