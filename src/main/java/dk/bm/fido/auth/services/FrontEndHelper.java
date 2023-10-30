@@ -5,7 +5,7 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.ui.Model;
 
-public class FrontEndService {
+public class FrontEndHelper {
     public static void setAuthenticated(Authentication authentication, Model model) {
         if (authentication != null && authentication.isAuthenticated()) {
             model.addAttribute("authenticated", true);

@@ -1,7 +1,7 @@
 package dk.bm.fido.auth.controllers;
 
 import dk.bm.fido.auth.external.services.WSO2Service;
-import dk.bm.fido.auth.services.FrontEndService;
+import dk.bm.fido.auth.services.FrontEndHelper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
@@ -31,10 +31,10 @@ public class FidoController {
             Authentication authentication,
             @RegisteredOAuth2AuthorizedClient("wso2") OAuth2AuthorizedClient authorizedClient
     ) {
-        FrontEndService.setAuthenticated(authentication, model);
+        FrontEndHelper.setAuthenticated(authentication, model);
         model.addAttribute(
                 "devices" ,
-                wso2Service.getUserDevices(FrontEndService.getBearerToken(authorizedClient))
+                wso2Service.getUserDevices(FrontEndHelper.getBearerToken(authorizedClient))
         );
         return "fidoDevices";
     }
@@ -50,7 +50,7 @@ public class FidoController {
             @PathVariable String credential,
             @RegisteredOAuth2AuthorizedClient("wso2") OAuth2AuthorizedClient authorizedClient
     ) {
-        wso2Service.deleteDeviceCredential(FrontEndService.getBearerToken(authorizedClient), credential);
+        wso2Service.deleteDeviceCredential(FrontEndHelper.getBearerToken(authorizedClient), credential);
         return "redirect:/fidoDevices";
     }
 
@@ -67,7 +67,7 @@ public class FidoController {
             @PathVariable String newName,
             @RegisteredOAuth2AuthorizedClient("wso2") OAuth2AuthorizedClient authorizedClient
     ) {
-        wso2Service.editDeviceName(FrontEndService.getBearerToken(authorizedClient), credential, newName);
+        wso2Service.editDeviceName(FrontEndHelper.getBearerToken(authorizedClient), credential, newName);
         return "redirect:/fidoDevices";
     }
 }
