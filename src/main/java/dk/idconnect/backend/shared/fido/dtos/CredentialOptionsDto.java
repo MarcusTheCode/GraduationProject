@@ -1,4 +1,4 @@
-package dk.bm.fido.auth.external.dtos;
+package dk.idconnect.backend.shared.fido.dtos;
 
 import lombok.Data;
 

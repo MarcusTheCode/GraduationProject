@@ -1,8 +1,8 @@
 package dk.bm.fido.auth.controllers;
 
-import dk.bm.fido.auth.external.dtos.CredentialOptionsRequestDto;
-import dk.bm.fido.auth.external.dtos.CredentialResponseDto;
-import dk.bm.fido.auth.external.services.WSO2Service;
+import dk.idconnect.backend.shared.fido.dtos.CredentialOptionsRequestDto;
+import dk.idconnect.backend.shared.fido.dtos.CredentialResponseDto;
+import dk.idconnect.backend.shared.fido.services.WSO2Service;
 import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;

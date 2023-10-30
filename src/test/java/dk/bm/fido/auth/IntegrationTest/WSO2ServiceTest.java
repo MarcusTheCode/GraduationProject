@@ -1,9 +1,9 @@
 package dk.bm.fido.auth.IntegrationTest;
 
 import dk.bm.fido.auth.Application;
-import dk.bm.fido.auth.external.dtos.CredentialOptionsRequestDto;
-import dk.bm.fido.auth.external.dtos.DeviceDto;
-import dk.bm.fido.auth.external.services.WSO2Service;
+import dk.idconnect.backend.shared.fido.dtos.CredentialOptionsRequestDto;
+import dk.idconnect.backend.shared.fido.dtos.DeviceDto;
+import dk.idconnect.backend.shared.fido.services.WSO2Service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
