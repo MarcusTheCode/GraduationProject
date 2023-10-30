@@ -18,6 +18,13 @@
 
 // https://github.com/wso2/identity-apps/blob/master/apps/myaccount/src/api/multi-factor-fido.ts
 
+class CredentialRequest {
+    /** @type String */
+    requestId;
+    /** @type Credential */
+    credential;
+}
+
 // TODO: Decipher this...
 function responseToObject(response) {
     if (response.u2fResponse) {

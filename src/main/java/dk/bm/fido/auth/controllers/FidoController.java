@@ -1,10 +1,13 @@
 package dk.bm.fido.auth.controllers;
 
-import dk.idconnect.backend.shared.fido.services.WSO2Service;
+import dk.bm.fido.auth.external.services.WSO2Service;
 import dk.bm.fido.auth.services.FrontEndHelper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +16,9 @@ import org.springframework.web.bind.annotation.*;
 public class FidoController {
 
     final WSO2Service wso2Service;
+
+    @Autowired
+    private OAuth2AuthorizedClientService clientService;
 
     public FidoController(WSO2Service wso2Service) {
         this.wso2Service = wso2Service;
@@ -31,6 +37,17 @@ public class FidoController {
             Authentication authentication,
             @RegisteredOAuth2AuthorizedClient("wso2") OAuth2AuthorizedClient authorizedClient
     ) {
+        if (authentication.getClass().isAssignableFrom(OAuth2AuthenticationToken.class)) {
+            OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
+            String clientRegistrationId = oauthToken.getAuthorizedClientRegistrationId();
+            if (clientRegistrationId.equals("wso2")) {
+                OAuth2AuthorizedClient client =
+                        clientService.loadAuthorizedClient(clientRegistrationId, oauthToken.getName());
+                String accessToken = client.getAccessToken().getTokenValue();
+            }
+        }
+
+
         FrontEndHelper.setAuthenticated(authentication, model);
         model.addAttribute(
                 "devices" ,

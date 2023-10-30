@@ -2,9 +2,9 @@ package dk.bm.fido.auth.unitTest;
 
 import dk.bm.fido.auth.BaseTestSetup;
 
-import dk.idconnect.backend.shared.fido.enums.W2isServerEPType;
+import dk.bm.fido.auth.external.enums.W2isServerEPType;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class W2isServerEpTypeTest extends BaseTestSetup {
