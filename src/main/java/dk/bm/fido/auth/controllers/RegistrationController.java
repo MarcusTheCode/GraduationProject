@@ -1,5 +1,7 @@
 package dk.bm.fido.auth.controllers;
 
+import dk.bm.fido.auth.external.dtos.CredentialOptionsRequestDto;
+import dk.bm.fido.auth.external.dtos.CredentialResponseDto;
 import dk.bm.fido.auth.external.services.WSO2Service;
 import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
@@ -23,7 +25,7 @@ public class RegistrationController {
      * @return The credential JSON object to send to the client
      */
     @PostMapping(value = "/register/start", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String registerStart(@RegisteredOAuth2AuthorizedClient("wso2") OAuth2AuthorizedClient authorizedClient) {
+    public CredentialOptionsRequestDto registerStart(@RegisteredOAuth2AuthorizedClient("wso2") OAuth2AuthorizedClient authorizedClient) {
         OAuth2AccessToken token = authorizedClient.getAccessToken();
         String bearerToken = token.getTokenType().getValue() + " " + token.getTokenValue();
 
@@ -37,7 +39,7 @@ public class RegistrationController {
      * @return A JSON object with the successful credential registration
      */
     @PostMapping(value = "/register/finish", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String registerFinish(@RegisteredOAuth2AuthorizedClient("wso2") OAuth2AuthorizedClient authorizedClient, @RequestBody String challengeResponse) {
+    public CredentialResponseDto registerFinish(@RegisteredOAuth2AuthorizedClient("wso2") OAuth2AuthorizedClient authorizedClient, @RequestBody CredentialResponseDto challengeResponse) {
         OAuth2AccessToken token = authorizedClient.getAccessToken();
         String bearerToken = token.getTokenType().getValue() + " " + token.getTokenValue();
 

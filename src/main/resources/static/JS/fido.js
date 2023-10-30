@@ -101,7 +101,7 @@ async function createCredentials(request) {
 /**
  * Finalizes a FIDO device registration
  * @param {string} requestId The ID of the registration request
- * @param {PublicKeyCredentialCreationOptions} credential The generated credential
+ * @param {Credential} credential The generated credential
  * @returns {Promise<any>} Returns success or failure
  */
 async function registerFinish(requestId, credential) {
@@ -125,7 +125,7 @@ async function registerFinish(requestId, credential) {
 
 /**
  * Start registering a FIDO device
- * @returns {Promise<any>} Returns the registration request with credential options
+ * @returns {Promise<PublicKeyCredentialCreationOptions>} Returns the registration request with credential options
  */
 async function registerStart() {
     // Call the backend to initiate registration
