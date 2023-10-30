@@ -1,4 +1,4 @@
-package dk.bm.fido.auth.unitTest;
+package dk.bm.fido.auth.IntegrationTest;
 
 import dk.bm.fido.auth.Application;
 import dk.bm.fido.auth.BaseTestSetup;

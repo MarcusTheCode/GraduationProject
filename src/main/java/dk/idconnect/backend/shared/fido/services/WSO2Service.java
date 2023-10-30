@@ -1,9 +1,9 @@
-package dk.bm.fido.auth.external.services;
+package dk.idconnect.backend.shared.fido.services;
 
-import dk.bm.fido.auth.external.dtos.CredentialOptionsRequestDto;
-import dk.bm.fido.auth.external.dtos.CredentialResponseDto;
-import dk.bm.fido.auth.external.dtos.DeviceDto;
-import dk.bm.fido.auth.external.enums.W2isServerEPType;
+import dk.idconnect.backend.shared.fido.dtos.CredentialOptionsRequestDto;
+import dk.idconnect.backend.shared.fido.dtos.CredentialResponseDto;
+import dk.idconnect.backend.shared.fido.dtos.DeviceDto;
+import dk.idconnect.backend.shared.fido.enums.W2isServerEPType;
 import lombok.extern.log4j.Log4j2;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
@@ -83,7 +83,7 @@ public class WSO2Service {
                 W2isServerEPType.DELETE_FIDO_DEVICE,
                 authorization,
                 new ParameterizedTypeReference<String>() {},
-                null, new HashMap<>(){{put("{credential}", credential);}}).getBody();
+                null, new HashMap<>(){{ put("{credential}", credential); }}).getBody();
     }
 
     /**
@@ -92,11 +92,11 @@ public class WSO2Service {
      * @param credential The ID of the credential to remove
      * @param newName The new name for the device
      */
-    public String editDeviceName(String authorization, String credential, String newName) {
-             return execute(
+    public void editDeviceName(String authorization, String credential, String newName) {
+             execute(
                 W2isServerEPType.EDIT_FIDO_DEVICE,
                 authorization,
-                new ParameterizedTypeReference<String>() {},
+                new ParameterizedTypeReference<Void>() {},
                 new JSONArray(){{
                     add(new JSONObject(){{
                         put("operation","REPLACE");
@@ -104,7 +104,7 @@ public class WSO2Service {
                         put("value", newName);
                     }}
                     );
-                }}, new HashMap<>(){{put("{credential}", credential);}}).getBody();
+                }}, new HashMap<>(){{ put("{credential}", credential); }}).getBody();
     }
 
     /**

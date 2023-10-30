@@ -2,13 +2,14 @@ package dk.bm.fido.auth.IntegrationTest;
 
 import dk.bm.fido.auth.Application;
 import dk.bm.fido.auth.BaseTestSetup;
-import dk.bm.fido.auth.external.dtos.CredentialOptionsRequestDto;
-import dk.bm.fido.auth.external.dtos.DeviceDto;
-import dk.bm.fido.auth.external.services.WSO2Service;
+import dk.idconnect.backend.fido.auth.external.dtos.CredentialOptionsRequestDto;
+import dk.idconnect.backend.fido.auth.external.dtos.DeviceDto;
+import dk.idconnect.backend.fido.auth.external.services.WSO2Service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -19,8 +20,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class WSO2ServiceTest extends BaseTestSetup {
     @Autowired private WSO2Service wso2Service;
 
-    @Value("${test.user.name:john}") private String username;
-    @Value("${test.user.password:Bacon}") private String password;
+    @Value("${test.user.credentialId:}") private String credentialId;
+    @Value("${test.user.name:}") private String username;
+    @Value("${test.user.password:}") private String password;
 
     private String getBasicToken() {
         String userpass = username + ":" + password;
@@ -37,10 +39,16 @@ public class WSO2ServiceTest extends BaseTestSetup {
 
     @Test
     public void editDeviceNameTest() {
-        //String devices = wso2Service.editDeviceName(getBasicToken(), "", "Test");
+        final String newName = "Test";
 
-        //assertThat(devices).isNotNull();
-        //assertThat(devices).isNotEmpty();
+        wso2Service.editDeviceName(getBasicToken(), credentialId, newName);
+
+        // Assert that the name has updated
+        List<DeviceDto> devices = wso2Service.getUserDevices(getBasicToken());
+
+        assertThat(devices.stream()).anyMatch(x ->
+                x.getCredentialId().equals(credentialId) &&
+                x.getDisplayName().equals(newName));
     }
 
     @Test
