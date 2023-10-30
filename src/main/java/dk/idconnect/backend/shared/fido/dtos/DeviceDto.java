@@ -1,4 +1,4 @@
-package dk.bm.fido.auth.external.dtos;
+package dk.idconnect.backend.shared.fido.dtos;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

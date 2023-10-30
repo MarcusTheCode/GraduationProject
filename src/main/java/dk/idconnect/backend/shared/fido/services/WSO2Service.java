@@ -1,9 +1,9 @@
-package dk.bm.fido.auth.external.services;
+package dk.idconnect.backend.shared.fido.services;
 
-import dk.bm.fido.auth.external.dtos.CredentialOptionsRequestDto;
-import dk.bm.fido.auth.external.dtos.CredentialResponseDto;
-import dk.bm.fido.auth.external.dtos.DeviceDto;
-import dk.bm.fido.auth.external.enums.W2isServerEPType;
+import dk.idconnect.backend.shared.fido.dtos.CredentialOptionsRequestDto;
+import dk.idconnect.backend.shared.fido.dtos.CredentialResponseDto;
+import dk.idconnect.backend.shared.fido.dtos.DeviceDto;
+import dk.idconnect.backend.shared.fido.enums.W2isServerEPType;
 import lombok.extern.log4j.Log4j2;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;

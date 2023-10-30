@@ -22,7 +22,6 @@ public class HomeControllerTest extends BaseTestSetup {
     }
 
     @Test
-    @WithUserDetails("admin")
     void HomeControllerGetRoot(){
         assertThat(homeController).isNotNull();
     }
