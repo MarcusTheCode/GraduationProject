@@ -52,19 +52,14 @@ public class FidoControllerIntegrationTest extends BaseTestSetup {
     public void getEditFidoDeviceTest() throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         List<DeviceDto> devices = wso2Service.getUserDevices(frontEndService.getAccessToken(authentication));
-        if (devices.isEmpty()) {
-            throw new Exception("No devices to edit");
-        }
+        assertThat(devices).asList().isNotEmpty();
         Random random = new Random();
         String updatedName = "editTest" + random.nextInt();
-
         mockMvc.perform(
                 post(String.format("/fidoDevices/editDevice/%s/%s", devices.get(0).getCredentialId(), updatedName)));
 
         String newName = wso2Service.getUserDevices(frontEndService.getAccessToken(authentication)).get(0).getDisplayName();
-        if (!newName.equals(updatedName)) {
-            throw new Exception("Name not updated:" + newName + " is different from " + updatedName);
-        }
+        assertThat(newName).isEqualTo(updatedName);
     }
 
 
