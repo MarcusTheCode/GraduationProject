@@ -6,6 +6,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
-@ActiveProfiles("cbr")
+@ActiveProfiles("magby")
 public abstract class BaseTestSetup {
 }
