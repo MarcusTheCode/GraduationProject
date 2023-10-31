@@ -5,6 +5,7 @@ import dk.bm.fido.auth.BaseTestSetup;
 import dk.bm.fido.auth.external.dtos.CredentialOptionsRequestDto;
 import dk.bm.fido.auth.external.dtos.DeviceDto;
 import dk.bm.fido.auth.external.services.WSO2Service;
+import dk.bm.fido.auth.services.FrontEndService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,8 +17,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class WSO2ServiceTest extends BaseTestSetup {
     @Autowired private WSO2Service wso2Service;
+    @Autowired private FrontEndService frontEndService;
 
-    @Value("${test.user.credentialId:}") private String credentialId;
     @Value("${test.user.name:}") private String username;
     @Value("${test.user.password:}") private String password;
 
@@ -38,14 +39,19 @@ public class WSO2ServiceTest extends BaseTestSetup {
     public void editDeviceNameTest() {
         final String newName = "Test";
 
-        wso2Service.editDeviceName(getBasicToken(), credentialId, newName);
-
-        // Assert that the name has updated
         List<DeviceDto> devices = wso2Service.getUserDevices(getBasicToken());
 
-        assertThat(devices.stream()).anyMatch(x ->
-                x.getCredentialId().equals(credentialId) &&
-                x.getDisplayName().equals(newName));
+        //  Assert that the user has FIDO2 devices available
+        assertThat(devices).asList().isNotEmpty();
+
+        //  Edit name of first device
+        String credentialId = devices.get(0).getCredentialId();
+        wso2Service.editDeviceName(getBasicToken(), credentialId, newName);
+
+
+        // Assert that the name has updated
+        devices = wso2Service.getUserDevices(getBasicToken());
+        assertThat(devices.get(0).getDisplayName()).isEqualTo(newName);
     }
 
     @Test
