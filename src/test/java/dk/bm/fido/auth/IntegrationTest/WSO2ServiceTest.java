@@ -10,26 +10,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class WSO2ServiceTest extends BaseTestSetup {
     @Autowired private WSO2Service wso2Service;
-    @Autowired private FrontEndService frontEndService;
 
     @Value("${test.user.name:}") private String username;
     @Value("${test.user.password:}") private String password;
 
-    private String getBasicToken() {
-        String userpass = username + ":" + password;
-        return  "Basic " + jakarta.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes(StandardCharsets.UTF_8));
-    }
-
     @Test
     public void getDevicesTest() {
-        List<DeviceDto> devices = wso2Service.getUserDevices(getBasicToken());
+        List<DeviceDto> devices = wso2Service.getUserDevices(FrontEndService.getBasicToken(username, password));
 
         assertThat(devices).isNotNull();
         assertThat(devices).isNotEmpty();
@@ -39,24 +32,24 @@ public class WSO2ServiceTest extends BaseTestSetup {
     public void editDeviceNameTest() {
         final String newName = "Test";
 
-        List<DeviceDto> devices = wso2Service.getUserDevices(getBasicToken());
+        List<DeviceDto> devices = wso2Service.getUserDevices(FrontEndService.getBasicToken(username, password));
 
         //  Assert that the user has FIDO2 devices available
         assertThat(devices).asList().isNotEmpty();
 
         //  Edit name of first device
         String credentialId = devices.get(0).getCredentialId();
-        wso2Service.editDeviceName(getBasicToken(), credentialId, newName);
+        wso2Service.editDeviceName(FrontEndService.getBasicToken(username, password), credentialId, newName);
 
 
         // Assert that the name has updated
-        devices = wso2Service.getUserDevices(getBasicToken());
+        devices = wso2Service.getUserDevices(FrontEndService.getBasicToken(username, password));
         assertThat(devices.get(0).getDisplayName()).isEqualTo(newName);
     }
 
     @Test
     public void startDeviceRegistrationTest() {
-        CredentialOptionsRequestDto credentialOptions = wso2Service.startUserDeviceRegistration(getBasicToken());
+        CredentialOptionsRequestDto credentialOptions = wso2Service.startUserDeviceRegistration(FrontEndService.getBasicToken(username, password));
 
         assertThat(credentialOptions).isNotNull();
         assertThat(credentialOptions.getRequestId()).isNotNull().isNotEmpty();
