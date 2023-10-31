@@ -3,7 +3,9 @@ package dk.bm.fido.auth.controllers;
 import dk.bm.fido.auth.external.dtos.CredentialOptionsRequestDto;
 import dk.bm.fido.auth.external.dtos.CredentialResponseDto;
 import dk.bm.fido.auth.external.services.WSO2Service;
+import dk.bm.fido.auth.services.FrontEndService;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
@@ -14,22 +16,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class RegistrationController {
     private final WSO2Service wso2Service;
+    private final FrontEndService frontEndService;
 
-    public RegistrationController(WSO2Service wso2Service) {
+    public RegistrationController(WSO2Service wso2Service, FrontEndService frontEndService) {
         this.wso2Service = wso2Service;
+        this.frontEndService = frontEndService;
     }
 
     /**
      * Starts the process of registering a new FIDO2 device
-     * @param authorizedClient the authorized client pulled from the authorization header
      * @return The credential JSON object to send to the client
      */
     @PostMapping(value = "/register/start", produces = MediaType.APPLICATION_JSON_VALUE)
-    public CredentialOptionsRequestDto registerStart(@RegisteredOAuth2AuthorizedClient("wso2") OAuth2AuthorizedClient authorizedClient) {
-        OAuth2AccessToken token = authorizedClient.getAccessToken();
-        String bearerToken = token.getTokenType().getValue() + " " + token.getTokenValue();
+    public CredentialOptionsRequestDto registerStart(Authentication authentication) {
+        String token = frontEndService.getAccessToken(authentication);
 
-        return wso2Service.startUserDeviceRegistration(bearerToken);
+        return wso2Service.startUserDeviceRegistration(token);
     }
 
     /**
@@ -39,10 +41,9 @@ public class RegistrationController {
      * @return A JSON object with the successful credential registration
      */
     @PostMapping(value = "/register/finish", produces = MediaType.APPLICATION_JSON_VALUE)
-    public CredentialResponseDto registerFinish(@RegisteredOAuth2AuthorizedClient("wso2") OAuth2AuthorizedClient authorizedClient, @RequestBody CredentialResponseDto challengeResponse) {
-        OAuth2AccessToken token = authorizedClient.getAccessToken();
-        String bearerToken = token.getTokenType().getValue() + " " + token.getTokenValue();
+    public CredentialResponseDto registerFinish(Authentication authentication, @RequestBody CredentialResponseDto challengeResponse) {
+        String token = frontEndService.getAccessToken(authentication);
 
-        return wso2Service.finishUserDeviceRegistration(bearerToken, challengeResponse);
+        return wso2Service.finishUserDeviceRegistration(token, challengeResponse);
     }
 }
