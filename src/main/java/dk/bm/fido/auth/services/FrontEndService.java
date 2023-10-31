@@ -1,5 +1,6 @@
 package dk.bm.fido.auth.services;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
@@ -16,6 +17,9 @@ import java.util.Base64;
 public class FrontEndService {
     private final OAuth2AuthorizedClientService clientService;
 
+    @Value("wso2")
+    private String oidcProvider;
+
     public FrontEndService(OAuth2AuthorizedClientService clientService) {
         this.clientService = clientService;
     }
@@ -24,7 +28,7 @@ public class FrontEndService {
         if (authentication.getClass().isAssignableFrom(OAuth2AuthenticationToken.class)) {
             OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
             String clientRegistrationId = oauthToken.getAuthorizedClientRegistrationId();
-            if (clientRegistrationId.equals("wso2")) {
+            if (clientRegistrationId.equals(oidcProvider)) {
                 OAuth2AuthorizedClient authorizedClient =
                         clientService.loadAuthorizedClient(clientRegistrationId, oauthToken.getName());
                 return FrontEndService.getBearerToken(authorizedClient);
