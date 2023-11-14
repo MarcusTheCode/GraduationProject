@@ -4,10 +4,12 @@ function switchToEditMode(button, credentialId) {
     const oldName = nameCell.innerText;
 
     const inputElement = document.createElement("input");
+    inputElement.className = "form-control mb-2";
     inputElement.type = "text";
     inputElement.value = oldName;
 
     const saveButton = document.createElement("button");
+    saveButton.className = "btn btn-primary";
     saveButton.innerHTML = "Save";
     saveButton.onclick = function() {
         const newName = inputElement.value;
